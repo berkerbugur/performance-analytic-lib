@@ -1,0 +1,24 @@
+{
+  "name": "performance-analytic-lib",
+  "version": "1.0.0",
+  "description": "Library for gathering performance analytics on call such as TTFB, FCP, Dom And Window Load Times.",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "performance",
+    "analytics",
+    "library"
+  ],
+  "author": "Berker Buğur",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/berkerbugur/performance-analytic-lib.git"
+  },
+  "bugs": {
+    "url": "https://github.com/berkerbugur/performance-analytic-lib/issues"
+  },
+  "homepage": "https://github.com/berkerbugur/performance-analytic-lib#readme"
+}
