@@ -1,6 +1,6 @@
 {
   "name": "performance-analytic-lib",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Library for gathering performance analytics on call such as TTFB, FCP, Dom And Window Load Times.",
   "main": "dist/index.js",
   "scripts": {
