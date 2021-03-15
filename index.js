@@ -19,6 +19,7 @@ class PerformanceAnalyzer {
                 const domLoad = navData?.domComplete ? navData?.domComplete : 0;
                 const windowLoad = navData?.domContentLoadedEventEnd - navData?.domContentLoadedEventStart;
 
+                //needs to be sent after observer fired
                 this.feedData({
                     ttfb,
                     fcp,
@@ -38,7 +39,7 @@ class PerformanceAnalyzer {
         }
 
         fetch(this.url, {
-            method: "PUT",
+            method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body)
         }).then(resp => {
