@@ -14,10 +14,10 @@ class PerformanceAnalyzer {
                 const paintData = performance.getEntriesByType('paint').filter((paint => paint.name === 'first-contentful-paint'))[0]; //returns PerformancePaintTiming array for each paint event so we need a filter
 
                 //respected calculations
-                const ttfb = navData.responseStart - navData.requestStart;
+                const ttfb = navData?.responseStart - navData?.requestStart;
                 const fcp = paintData.startTime ? paintData.startTime : 0;
-                const domLoad = navData.domComplete ? navData.domComplete : 0;
-                const windowLoad = navData.domContentLoadedEventEnd - navData.domContentLoadedEventStart;
+                const domLoad = navData?.domComplete ? navData?.domComplete : 0;
+                const windowLoad = navData?.domContentLoadedEventEnd - navData?.domContentLoadedEventStart;
 
                 this.feedData({
                     ttfb,
@@ -25,19 +25,26 @@ class PerformanceAnalyzer {
                     domLoad,
                     windowLoad
                 });
-            }, 0)
+            }, 500);
         })
     }
 
     feedData(data) {
+        const body = {
+            ttfb: data.ttfb,
+            fcp: data.fcp,
+            domLoad: data.domLoad,
+            windowLoad: data.windowLoad
+        }
+
         fetch(this.url, {
             method: "PUT",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(data)
+            body: JSON.stringify(body)
         }).then(resp => {
             console.log(`Successfully fed data: ${resp.body}`);
         }).catch(err => {
-            console.log(`[PerformanceAnalyzer] Cannot feed data to ${this.url}`)
+            console.log(`[PerformanceAnalyzer] Cannot feed data to ${this.url}. Reason: ${err}`)
         })
     }
 }
