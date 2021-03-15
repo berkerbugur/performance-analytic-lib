@@ -8,40 +8,34 @@ class PerformanceAnalyzer {
 
     analyzeMe() {
         window.addEventListener("load", () => {
-            setTimeout(() => {
+            let perfData = {}
+
+            let perfObserver = PerformanceObserver(perfList => {
                 //Since window.performance.timing has deprecated, and this is the only way to get performance metrics
                 const navData = performance.getEntriesByType('navigation')[0]; //returns PerformanceNavigationTiming array
                 const paintData = performance.getEntriesByType('paint').filter((paint => paint.name === 'first-contentful-paint'))[0]; //returns PerformancePaintTiming array for each paint event so we need a filter
 
                 //respected calculations
-                const ttfb = navData?.responseStart - navData?.requestStart;
-                const fcp = paintData.startTime ? paintData.startTime : 0;
-                const domLoad = navData?.domComplete ? navData?.domComplete : 0;
-                const windowLoad = navData?.domContentLoadedEventEnd - navData?.domContentLoadedEventStart;
+                perfData.ttfb = navData?.responseStart - navData?.requestStart;
+                perfData.fcp = paintData.startTime ? paintData.startTime : 0;
+                perfData.domLoad = navData?.domComplete ? navData?.domComplete : 0;
+                perfData.windowLoad = navData?.domContentLoadedEventEnd - navData?.domContentLoadedEventStart;
+            });
 
-                //needs to be sent after observer fired
-                this.feedData({
-                    ttfb,
-                    fcp,
-                    domLoad,
-                    windowLoad
-                });
+            perfObserver.observe({entryTypes: ["navigation", "paint"]});
+
+            //needs to fire after observer catches event
+            setTimeout(() => {
+                this.feedData(perfData);
             }, 500);
         })
     }
 
     feedData(data) {
-        const body = {
-            ttfb: data.ttfb,
-            fcp: data.fcp,
-            domLoad: data.domLoad,
-            windowLoad: data.windowLoad
-        }
-
         fetch(this.url, {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(body)
+            body: JSON.stringify(data)
         }).then(resp => {
             console.log(`Successfully fed data: ${resp.body}`);
         }).catch(err => {
